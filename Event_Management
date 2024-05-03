@@ -37,4 +37,124 @@ class EmployeeManager:
                 self.save_employees()
                 return True
         return False
-y
+
+    def save_employees(self):
+        with open('employees.pkl', 'wb') as output:
+            pickle.dump(self.employees, output, pickle.HIGHEST_PROTOCOL)
+
+    def load_employees(self):
+        if os.path.exists('employees.pkl'):
+            with open('employees.pkl', 'rb') as input:
+                return pickle.load(input)
+        return []
+
+class Guest:
+    def __init__(self, guest_id, name, address, contact_info):
+        self.guest_id = guest_id
+        self.name = name
+        self.address = address
+        self.contact_info = contact_info
+
+
+
+class GuestManager:
+    def __init__(self):
+        self.guests = self.load_guests()
+
+    def add_guest(self, guest):
+        self.guests.append(guest)
+        self.save_guests()
+
+    def load_guests(self):
+        try:
+            with open('guests.pkl', 'rb') as input:
+                return pickle.load(input)
+        except FileNotFoundError:
+            return []
+
+    def save_guests(self):
+        with open('guests.pkl', 'wb') as output:
+            pickle.dump(self.guests, output, pickle.HIGHEST_PROTOCOL)
+
+
+class Venue:
+     def __init__(self, venue_id, name, address, capacity):
+        self.venue_id = venue_id
+        self.name = name
+        self.address = address
+        self.capacity = capacity
+
+
+class VenueManager:
+    def __init__(self):
+        self.venues = self.load_venues()
+
+    def add_venue(self, venue):
+        self.venues.append(venue)
+        self.save_venues()
+
+    def load_venues(self):
+        try:
+            with open('venues.pkl', 'rb') as input:
+                return pickle.load(input)
+        except FileNotFoundError:
+            return []
+
+    def save_venues(self):
+        with open('venues.pkl', 'wb') as output:
+            pickle.dump(self.venues, output, pickle.HIGHEST_PROTOCOL)
+
+
+class Event:
+    def __init__(self, event_id, type, theme, date, time, duration):
+        self.event_id = event_id
+        self.type = type
+        self.theme = theme
+        self.date = date
+        self.time = time
+        self.duration = duration
+
+
+class EventManager:
+    def __init__(self):
+        self.events = self.load_events()
+
+    def add_event(self, event):
+        self.events.append(event)
+        self.save_events()
+
+    def load_events(self):
+        try:
+            with open('events.pkl', 'rb') as input:
+                return pickle.load(input)
+        except FileNotFoundError:
+            return []
+
+    def save_events(self):
+        with open('events.pkl', 'wb') as output:
+            pickle.dump(self.events, output, pickle.HIGHEST_PROTOCOL)
+
+
+class AppController:
+    def __init__(self):
+        self.employee_manager = EmployeeManager()
+        self.guest_manager = GuestManager()
+        self.venue_manager = VenueManager()
+        self.event_manager = EventManager()
+
+    # Employee Methods
+    def add_employee(self, employee_details):
+        employee = Employee(**employee_details)
+        self.employee_manager.add_employee(employee)
+
+    def delete_employee(self, employee_id):
+        self.employee_manager.delete_employee(employee_id)
+
+    def modify_employee(self, employee_id, new_details):
+        return self.employee_manager.modify_employee(employee_id, new_details)
+
+    def get_employees(self):
+        return self.employee_manager.employees
+
+    # Guest Methods
+    d
