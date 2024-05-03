@@ -472,4 +472,32 @@ class EventManagementApp:
         top.geometry("600x400")  # Adjust size for better display of table
 
         # Create a Treeview widget
-        t
+        tree = ttk.Treeview(top, columns=("ID", "Name", "Address", "Capacity"), show='headings')
+        tree.heading('ID', text="Venue ID")
+        tree.heading('Name', text="Name")
+        tree.heading('Address', text="Address")
+        tree.heading('Capacity', text="Capacity")
+
+        # Define column width and alignment
+        tree.column('ID', width=100, anchor='center')
+        tree.column('Name', width=150, anchor='center')
+        tree.column('Address', width=150, anchor='center')
+        tree.column('Capacity', width=100, anchor='center')
+
+        for venue in self.controller.get_venues():
+            tree.insert('', tk.END, values=(venue.venue_id, venue.name, venue.address, venue.capacity))
+
+        # Add a scrollbar
+        scrollbar = ttk.Scrollbar(top, orient='vertical', command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+        tree.pack(side='left', fill='both', expand=True)
+
+    def run(self):
+        self.root.mainloop()
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = EventManagementApp(root)
+    app.run()
