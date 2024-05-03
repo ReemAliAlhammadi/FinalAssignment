@@ -281,4 +281,195 @@ class EventManagementApp:
 
         tk.Button(self.top, text="Update", command=self.update_employee).grid(row=len(labels), columnspan=2)
 
-    d
+    def update_employee(self):
+        employee_id = self.entries['employee_id'].get()
+        details = {key: entry.get() for key, entry in self.entries.items() if key != employee_id}
+        try:
+            if employee_id != None or self.controller.modify_employee(employee_id, details):
+                # employee = Employee(**details)  # This should now work as the keys match the expected parameter names
+                self.controller.modify_employee(employee_id, details)
+                messagebox.showinfo("Success", "Employee details updated successfully")
+                self.top.destroy()
+            else:
+                messagebox.showerror("Error", "Employee not found")
+        except TypeError as e:
+            messagebox.showerror("Error", str(e))
+
+    def view_employees(self):
+        top = tk.Toplevel(self.root)
+        top.title("List of Employees")
+        top.geometry("600x400")  # Adjust size for better display of table
+
+        # Create a Treeview widget
+        tree = ttk.Treeview(top, columns=("ID", "Name", "Job Title", "Department"), show='headings')
+        tree.heading('ID', text="Employee ID")
+        tree.heading('Name', text="Name")
+        tree.heading('Job Title', text="Job Title")
+        tree.heading('Department', text="Department")
+
+        # Define column width and alignment
+        tree.column('ID', width=100, anchor='center')
+        tree.column('Name', width=150, anchor='center')
+        tree.column('Job Title', width=150, anchor='center')
+        tree.column('Department', width=100, anchor='center')
+
+        for employee in self.controller.get_employees():
+            tree.insert('', tk.END,
+                        values=(employee.employee_id, employee.name, employee.job_title, employee.department))
+
+        # Add a scrollbar
+        scrollbar = ttk.Scrollbar(top, orient='vertical', command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+        tree.pack(side='left', fill='both', expand=True)
+
+    # Adding Guest Detials
+    def add_guest(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Add New Guest")
+        self.top.geometry("300x200")
+
+        # Note: Key names are now simplified and match the constructor parameters exactly
+        labels = ["Client ID", "Name", "Address", "Contact Info"]
+        field_names = ["guest_id", "name", "address", "contact_info"]  # Constructor parameter names
+        self.entries = {}
+        for i, (label, field_name) in enumerate(zip(labels, field_names)):
+            tk.Label(self.top, text=label).grid(row=i, column=0)
+            entry = tk.Entry(self.top)
+            entry.grid(row=i, column=1)
+            self.entries[field_name] = entry  # Use constructor parameter name as key
+
+        tk.Button(self.top, text="Save", command=self.save_guest).grid(row=len(labels), columnspan=2)
+
+    def save_guest(self):
+        details = {key: entry.get() for key, entry in self.entries.items()}
+        try:
+            # employee = Employee(**details)  # This should now work as the keys match the expected parameter names
+            self.controller.add_guest(details)
+            messagebox.showinfo("Success", "Client added successfully")
+            self.top.destroy()
+        except TypeError as e:
+            messagebox.showerror("Error", str(e))
+
+    def view_guest(self):
+        top = tk.Toplevel(self.root)
+        top.title("List of Clients")
+        top.geometry("600x400")  # Adjust size for better display of table
+
+        # Create a Treeview widget
+        tree = ttk.Treeview(top, columns=("ID", "Name", "Address", "Contact Info"), show='headings')
+        tree.heading('ID', text="Guest ID")
+        tree.heading('Name', text="Name")
+        tree.heading('Address', text="Address")
+        tree.heading('Contact Info', text="Contact Info")
+
+        # Define column width and alignment
+        tree.column('ID', width=100, anchor='center')
+        tree.column('Name', width=150, anchor='center')
+        tree.column('Address', width=150, anchor='center')
+        tree.column('Contact Info', width=100, anchor='center')
+
+        for guest in self.controller.get_guests():
+            tree.insert('', tk.END, values=(guest.guest_id, guest.name, guest.address, guest.contact_info))
+
+        # Add a scrollbar
+        scrollbar = ttk.Scrollbar(top, orient='vertical', command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+        tree.pack(side='left', fill='both', expand=True)
+
+    # adding Event details
+    def add_event(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Add New Event")
+        self.top.geometry("300x200")
+
+        # Note: Key names are now simplified and match the constructor parameters exactly
+        labels = ["Event ID", "Type", "Theme", "Date", "Time", "Duration"]
+        field_names = ["event_id", "type", "theme", "date", "time", "duration"]  # Constructor parameter names
+        self.entries = {}
+        for i, (label, field_name) in enumerate(zip(labels, field_names)):
+            tk.Label(self.top, text=label).grid(row=i, column=0)
+            entry = tk.Entry(self.top)
+            entry.grid(row=i, column=1)
+            self.entries[field_name] = entry  # Use constructor parameter name as key
+
+        tk.Button(self.top, text="Save", command=self.save_event).grid(row=len(labels), columnspan=2)
+
+    def save_event(self):
+        details = {key: entry.get() for key, entry in self.entries.items()}
+        try:
+            # employee = Employee(**details)  # This should now work as the keys match the expected parameter names
+            self.controller.add_event(details)
+            messagebox.showinfo("Success", "Event added successfully")
+            self.top.destroy()
+        except TypeError as e:
+            messagebox.showerror("Error", str(e))
+
+    def view_event(self):
+        top = tk.Toplevel(self.root)
+        top.title("List of Events")
+        top.geometry("800x400")  # Adjust size for better display of table
+
+        # Create a Treeview widget
+        tree = ttk.Treeview(top, columns=("ID", "Type", "Theme", "Date", "Time", "Duration"), show='headings')
+        tree.heading('ID', text="Event ID")
+        tree.heading('Type', text="Type")
+        tree.heading('Theme', text="Theme")
+        tree.heading('Date', text="Date")
+        tree.heading('Time', text="Time")
+        tree.heading('Duration', text="Duration")
+
+        # Define column width and alignment
+        tree.column('ID', width=100, anchor='center')
+        tree.column('Type', width=150, anchor='center')
+        tree.column('Theme', width=150, anchor='center')
+        tree.column('Date', width=100, anchor='center')
+        tree.column('Time', width=100, anchor='center')
+        tree.column('Duration', width=100, anchor='center')
+
+        for event in self.controller.get_events():
+            tree.insert('', tk.END,
+                        values=(event.event_id, event.type, event.theme, event.date, event.time, event.duration))
+
+        # Add a scrollbar
+        scrollbar = ttk.Scrollbar(top, orient='vertical', command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+        tree.pack(side='left', fill='both', expand=True)
+
+    # Adding Venue Detials
+    def add_venue(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Add New Venue")
+        self.top.geometry("300x200")
+
+        # Note: Key names are now simplified and match the constructor parameters exactly
+        labels = ["Venue ID", "Name", "Address", "Capacity"]
+        field_names = ["venue_id", "name", "address", "capacity"]  # Constructor parameter names
+        self.entries = {}
+        for i, (label, field_name) in enumerate(zip(labels, field_names)):
+            tk.Label(self.top, text=label).grid(row=i, column=0)
+            entry = tk.Entry(self.top)
+            entry.grid(row=i, column=1)
+            self.entries[field_name] = entry  # Use constructor parameter name as key
+
+        tk.Button(self.top, text="Save", command=self.save_venue).grid(row=len(labels), columnspan=2)
+
+    def save_venue(self):
+        details = {key: entry.get() for key, entry in self.entries.items()}
+        try:
+            # employee = Employee(**details)  # This should now work as the keys match the expected parameter names
+            self.controller.add_venue(details)
+            messagebox.showinfo("Success", "Venue added successfully")
+            self.top.destroy()
+        except TypeError as e:
+            messagebox.showerror("Error", str(e))
+
+    def view_venue(self):
+        top = tk.Toplevel(self.root)
+        top.title("List of Venues")
+        top.geometry("600x400")  # Adjust size for better display of table
+
+        # Create a Treeview widget
+        t
