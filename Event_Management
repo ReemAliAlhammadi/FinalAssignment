@@ -157,4 +157,128 @@ class AppController:
         return self.employee_manager.employees
 
     # Guest Methods
+    def add_guest(self, guest_details):
+        guest = Guest(**guest_details)
+        self.guest_manager.add_guest(guest)
+
+    def delete_guest(self, guest_id):
+        self.guest_manager.delete_guest(guest_id)
+
+    def modify_guest(self, guest_id, new_details):
+        return self.guest_manager.modify_guest(guest_id, new_details)
+
+    def get_guests(self):
+        return self.guest_manager.guests
+
+    # Venue Methods
+    def add_venue(self, venue_details):
+        venue = Venue(**venue_details)
+        self.venue_manager.add_venue(venue)
+
+    def delete_venue(self, venue_id):
+        self.venue_manager.delete_venue(venue_id)
+
+    def modify_venue(self, venue_id, new_details):
+        return self.venue_manager.modify_venue(venue_id, new_details)
+
+    def get_venues(self):
+        return self.venue_manager.venues
+
+    # Event Methods
+    def add_event(self, event_details):
+        event = Event(**event_details)
+        self.event_manager.add_event(event)
+
+    def delete_event(self, event_id):
+        self.event_manager.delete_event(event_id)
+
+    def modify_event(self, event_id, new_details):
+        return self.event_manager.modify_event(event_id, new_details)
+
+    def get_events(self):
+        return self.event_manager.events
+
+
+class EventManagementApp:
+    def __init__(self, root):
+        self.controller = AppController()
+        self.root = root
+        self.root.title("Event Management System")
+        self.root.geometry("500x300")
+
+        tk.Button(self.root, text="Add Employee", command=self.add_employee, width=20).grid(row=0, column=0, pady=10,
+                                                                                            padx=10)
+        tk.Button(self.root, text="Delete Employee", command=self.delete_employee, width=20).grid(row=1, column=0,
+                                                                                                  pady=10, padx=10)
+        tk.Button(self.root, text="Modify Employee", command=self.modify_employee, width=20).grid(row=2, column=0,
+                                                                                                  pady=10, padx=10)
+        tk.Button(self.root, text="Display Employees", command=self.view_employees, width=20).grid(row=3, column=0,
+                                                                                                   pady=10, padx=10)
+        tk.Button(self.root, text="Add Event", command=self.add_event, width=20).grid(row=0, column=1, pady=10, padx=10)
+        tk.Button(self.root, text="Display Event", command=self.view_event, width=20).grid(row=1, column=1, pady=10,
+                                                                                           padx=10)
+        tk.Button(self.root, text="Add Venue", command=self.add_venue, width=20).grid(row=2, column=1, pady=10, padx=10)
+        tk.Button(self.root, text="Display Venue", command=self.view_venue, width=20).grid(row=3, column=1, pady=10,
+                                                                                           padx=10)
+        tk.Button(self.root, text="Add Client", command=self.add_guest, width=20).grid(row=0, column=2, pady=10,
+                                                                                       padx=10)
+        tk.Button(self.root, text="Display Client", command=self.view_guest, width=20).grid(row=1, column=2, pady=10,
+                                                                                            padx=10)
+        # tk.Button(self.root, text="Add Suplier", command=self.view_employees, width=20).grid(row=2, column=2, pady=10, padx=10)
+        # tk.Button(self.root, text="Display Suplier", command=self.view_employees, width=20).grid(row=3, column=2, pady=10, padx=10)
+
+        self.root.grid_columnconfigure(0, weight=1)  # Makes the column expandable
+
+    def add_employee(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Add New Employee")
+        self.top.geometry("300x200")
+
+        # Note: Key names are now simplified and match the constructor parameters exactly
+        labels = ["Employee ID", "Name", "Job Title", "Department"]
+        field_names = ["employee_id", "name", "job_title", "department"]  # Constructor parameter names
+        self.entries = {}
+        for i, (label, field_name) in enumerate(zip(labels, field_names)):
+            tk.Label(self.top, text=label).grid(row=i, column=0)
+            entry = tk.Entry(self.top)
+            entry.grid(row=i, column=1)
+            self.entries[field_name] = entry  # Use constructor parameter name as key
+
+        tk.Button(self.top, text="Save", command=self.save_employee).grid(row=len(labels), columnspan=2)
+
+    def save_employee(self):
+        details = {key: entry.get() for key, entry in self.entries.items()}
+        try:
+            employee = Employee(**details)  # This should now work as the keys match the expected parameter names
+            self.controller.add_employee(details)
+            messagebox.showinfo("Success", "Employee added successfully")
+            self.top.destroy()
+        except TypeError as e:
+            messagebox.showerror("Error", str(e))
+
+    def delete_employee(self):
+        employee_id = simpledialog.askstring("Input", "Enter Employee ID to delete:")
+        if employee_id is None:
+            print("Please provide the Empoly id and try agian.")
+        else:
+            self.controller.delete_employee(employee_id)
+            messagebox.showinfo("Success", "Employee deleted successfully")
+
+    def modify_employee(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Update Employee Details")
+        self.top.geometry("300x200")
+
+        # Note: Key names are now simplified and match the constructor parameters exactly
+        labels = ["Employee ID", "Name", "Job Title", "Department"]
+        field_names = ["employee_id", "name", "job_title", "department"]  # Constructor parameter names
+        self.entries = {}
+        for i, (label, field_name) in enumerate(zip(labels, field_names)):
+            tk.Label(self.top, text=label).grid(row=i, column=0)
+            entry = tk.Entry(self.top)
+            entry.grid(row=i, column=1)
+            self.entries[field_name] = entry  # Use constructor parameter name as key
+
+        tk.Button(self.top, text="Update", command=self.update_employee).grid(row=len(labels), columnspan=2)
+
     d
