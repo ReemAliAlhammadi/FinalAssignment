@@ -5,3 +5,35 @@ from tkinter import ttk
 from tkinter import simpledialog, messagebox
 
 
+class Employee:
+    def __init__(self, employee_id, name, job_title, department):
+        self.employee_id = employee_id
+        self.name = name
+        self.job_title = job_title
+        self.department = department
+
+ def update(self, new_details):
+        self.name = new_details.get('name', self.name)
+        self.job_title = new_details.get('job_title', self.job_title)
+        self.department = new_details.get('department', self.department)
+
+
+class EmployeeManager:
+    def __init__(self):
+        self.employees = self.load_employees()
+
+    def add_employee(self, employee):
+        self.employees.append(employee)
+        self.save_employees()
+
+    def delete_employee(self, employee_id):
+        self.employees = [emp for emp in self.employees if emp.employee_id != employee_id]
+        self.save_employees()
+
+    def modify_employee(self, employee_id, new_details):
+        for emp in self.employees:
+            if emp.employee_id == employee_id:
+                emp.update(new_details)
+                self.save_employees()
+                return True
+        return False
